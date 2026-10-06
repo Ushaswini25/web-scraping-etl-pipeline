@@ -1,6 +1,6 @@
 {
-    "run_timestamp": "2026-10-06T15:34:13",
-    "execution_time_seconds": 62.44,
+    "run_timestamp": "2026-10-06T15:41:08",
+    "execution_time_seconds": 61.09,
     "records_collected_per_source": {
         "books_to_scrape": 1000,
         "quotes_to_scrape": 100
