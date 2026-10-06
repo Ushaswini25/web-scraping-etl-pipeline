@@ -6,8 +6,6 @@ def clean_text(value):
         return ""
 
     value = str(value)
-
-    # Remove extra whitespace
     value = re.sub(r"\s+", " ", value)
 
     return value.strip()
@@ -19,7 +17,6 @@ def clean_price(value):
     if not value:
         return ""
 
-    # Keep only numbers and decimal point
     cleaned = re.sub(r"[^\d.]", "", value)
 
     return cleaned
@@ -48,7 +45,11 @@ def clean_tags(value):
     if not value:
         return ""
 
-    tags = [tag.strip() for tag in value.split(",")]
+    tags = [
+        tag.strip()
+        for tag in value.split(",")
+        if tag.strip()
+    ]
 
     return ", ".join(tags)
 

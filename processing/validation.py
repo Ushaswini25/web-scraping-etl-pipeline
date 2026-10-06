@@ -7,12 +7,20 @@ REQUIRED_FIELDS = [
     "name_or_title",
 ]
 
+VALID_SOURCES = [
+    "books_to_scrape",
+    "quotes_to_scrape",
+]
+
 
 def is_valid_url(url):
     try:
         parsed = urlparse(url)
 
-        return parsed.scheme in ("http", "https") and bool(parsed.netloc)
+        return (
+            parsed.scheme in ("http", "https")
+            and bool(parsed.netloc)
+        )
 
     except Exception:
         return False
@@ -21,36 +29,38 @@ def is_valid_url(url):
 def validate_record(record):
     errors = []
 
-    # Check required fields
     for field in REQUIRED_FIELDS:
         value = record.get(field, "")
 
         if not value or not str(value).strip():
-            errors.append(f"Missing required field: {field}")
+            errors.append(
+                f"Missing required field: {field}"
+            )
 
-    # Validate source
-    if record.get("source") not in [
-        "books_to_scrape",
-        "quotes_to_scrape",
-    ]:
+    source = record.get("source", "")
+
+    if source not in VALID_SOURCES:
         errors.append("Invalid source")
 
-    # Validate URL
     source_url = record.get("source_url", "")
 
-    if source_url and not is_valid_url(source_url):
+    if not source_url:
+        errors.append("Missing source_url")
+    elif not is_valid_url(source_url):
         errors.append("Invalid source_url")
 
-    # Validate price
     price = record.get("price", "")
 
     if price:
         try:
-            float(price)
+            price_value = float(price)
+
+            if price_value < 0:
+                errors.append("Price cannot be negative")
+
         except (ValueError, TypeError):
             errors.append("Invalid price")
 
-    # Validate rating
     rating = record.get("rating", "")
 
     if rating:

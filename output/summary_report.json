@@ -1,9 +1,23 @@
 {
-    "run_timestamp": "2026-10-06T14:01:22",
-    "raw_records": 1020,
+    "run_timestamp": "2026-10-06T15:34:13",
+    "execution_time_seconds": 62.44,
+    "records_collected_per_source": {
+        "books_to_scrape": 1000,
+        "quotes_to_scrape": 100
+    },
+    "raw_records": 1100,
+    "records_after_cleaning_and_validation": 1100,
+    "records_after_cleaning_and_validation_per_source": {
+        "books_to_scrape": 1000,
+        "quotes_to_scrape": 100
+    },
     "rejected_records": 0,
     "duplicate_records": 1,
-    "final_records": 1019,
+    "final_records": 1099,
+    "final_records_per_source": {
+        "books_to_scrape": 999,
+        "quotes_to_scrape": 100
+    },
     "reconciliation": true,
     "rejected_details": []
 }

@@ -1,6 +1,12 @@
+import logging
+from urllib.parse import urljoin
+
 from bs4 import BeautifulSoup
 
 from scrapers.base_scraper import BaseScraper
+
+
+logger = logging.getLogger(__name__)
 
 
 class QuotesScraper(BaseScraper):
@@ -14,6 +20,7 @@ class QuotesScraper(BaseScraper):
             response = self.get_page(current_url)
 
             if response is None:
+                logger.error("Skipping failed page: %s", current_url)
                 break
 
             soup = BeautifulSoup(response.text, "lxml")
@@ -57,9 +64,8 @@ class QuotesScraper(BaseScraper):
             next_button = soup.select_one("li.next a")
 
             if next_button:
-                next_url = next_button.get("href")
-
-                current_url = response.url.rsplit("/", 1)[0] + "/" + next_url
+                next_url = next_button.get("href", "")
+                current_url = urljoin(response.url, next_url)
             else:
                 current_url = None
 

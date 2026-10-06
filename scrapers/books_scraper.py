@@ -1,6 +1,13 @@
+from urllib.parse import urljoin
+
 from bs4 import BeautifulSoup
 
 from scrapers.base_scraper import BaseScraper
+
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class BooksScraper(BaseScraper):
@@ -14,6 +21,7 @@ class BooksScraper(BaseScraper):
             response = self.get_page(current_url)
 
             if response is None:
+                logger.error("Skipping failed page: %s", current_url)
                 break
 
             soup = BeautifulSoup(response.text, "lxml")
@@ -50,9 +58,10 @@ class BooksScraper(BaseScraper):
                 book_url = ""
 
                 if title_element:
-                    book_url = title_element.get("href", "")
-
-                    book_url = response.url.rsplit("/", 1)[0] + "/" + book_url
+                    book_url = urljoin(
+                        response.url,
+                        title_element.get("href", "")
+                    )
 
                 books.append({
                     "source": "books_to_scrape",
@@ -69,9 +78,8 @@ class BooksScraper(BaseScraper):
             next_button = soup.select_one("li.next a")
 
             if next_button:
-                next_url = next_button.get("href")
-
-                current_url = response.url.rsplit("/", 1)[0] + "/" + next_url
+                next_url = next_button.get("href", "")
+                current_url = urljoin(response.url, next_url)
             else:
                 current_url = None
 

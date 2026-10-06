@@ -8,16 +8,26 @@ def normalize_for_fingerprint(value):
 
     value = str(value).lower()
 
-    # Remove punctuation and special characters
-    value = re.sub(r"[^a-z0-9\s]", "", value)
+    value = re.sub(
+        r"[^a-z0-9\s]",
+        "",
+        value
+    )
 
-    # Remove extra spaces
-    value = re.sub(r"\s+", " ", value)
+    value = re.sub(
+        r"\s+",
+        " ",
+        value
+    )
 
     return value.strip()
 
 
 def create_fingerprint(record):
+    source = normalize_for_fingerprint(
+        record.get("source", "")
+    )
+
     name = normalize_for_fingerprint(
         record.get("name_or_title", "")
     )
@@ -26,11 +36,9 @@ def create_fingerprint(record):
         record.get("author", "")
     )
 
-    source = normalize_for_fingerprint(
-        record.get("source", "")
+    fingerprint_text = (
+        f"{source}|{name}|{author}"
     )
-
-    fingerprint_text = f"{source}|{name}|{author}"
 
     return hashlib.sha256(
         fingerprint_text.encode("utf-8")
